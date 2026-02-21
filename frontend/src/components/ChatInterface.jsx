@@ -265,14 +265,14 @@ const ChatInterface = () => {
                 <div className="p-8 bg-white/[0.02] border-t border-white/[0.05] relative z-20">
                     <form onSubmit={handleSend} className="relative flex gap-4">
                         <div className="relative flex-1 group">
-                            <div className="absolute inset-0 bg-indigo-500/5 rounded-3xl blur-xl group-focus-within:bg-indigo-500/10 transition-all" />
+                            <div className="absolute inset-0 bg-indigo-500/5 rounded-3xl blur-xl group-focus-within:bg-indigo-500/10 transition-all pointer-events-none" />
                             <input
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 disabled={isLoading}
                                 placeholder={isListening ? "LINK ACTIVE: LISTENING..." : "ENTER COMMAND..."}
-                                className={`w-full bg-black/40 border border-white/10 text-white placeholder-white/10 text-xs font-mono rounded-3xl py-6 pl-8 pr-20 focus:outline-none focus:border-indigo-500/40 ring-offset-black focus:ring-1 focus:ring-indigo-500/30 transition-all ${isListening ? 'border-indigo-500/60 shadow-[0_0_30px_rgba(99,102,241,0.2)]' : ''}`}
+                                className={`relative z-10 w-full bg-black/40 border border-white/10 text-white placeholder-white/10 text-xs font-mono rounded-3xl py-6 pl-8 pr-20 focus:outline-none focus:border-indigo-500/40 ring-offset-black focus:ring-1 focus:ring-indigo-500/30 transition-all ${isListening ? 'border-indigo-500/60 shadow-[0_0_30px_rgba(99,102,241,0.2)]' : ''}`}
                             />
 
                             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
