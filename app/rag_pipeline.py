@@ -42,24 +42,43 @@ def generate_answer_hf_stream(context_docs, user_query):
     messages = [
         {
             "role": "system",
-            "content": "You are a customer support assistant. Answer the question based ONLY on the following context. If the answer is not in the context, say 'I don't know.' Do not use outside knowledge."
+            "content": "You are a professional customer support assistant. Your task is to provide a single, concise answer to the user's question using ONLY the provided context. Do NOT include any other questions or answers from the context. If the answer is not found in the context, say 'I don't know.' Stop immediately after providing the answer."
         },
         {
             "role": "user",
-            "content": f"Context:\n{context_text}\n\nQuestion: {user_query}"
+            "content": f"Context:\n{context_text}\n\nUser Question: {user_query}"
         }
     ]
 
+    # Manual stop detection to ensure absolute safety
+    stop_words = ["Question:", "Question", "Answer:", "User Question:"]
+    accumulated_text = ""
+
     try:
-        # chat_completion is the modern, conversational-task compatible way
         for message in client.chat_completion(
             model=MODEL_ID,
             messages=messages,
-            max_tokens=500,
+            max_tokens=250,
             stream=True
         ):
             token = message.choices[0].delta.content
             if token:
+                accumulated_text += token
+                
+                # Check if any stop word has appeared in the stream
+                should_stop = False
+                for stop_word in stop_words:
+                    if stop_word in accumulated_text:
+                        # Yield everything BEFORE the stop word and then break
+                        final_chunk = token.split(stop_word)[0]
+                        if final_chunk:
+                            yield final_chunk
+                        should_stop = True
+                        break
+                
+                if should_stop:
+                    break
+                
                 yield token
     except Exception as e:
         yield f"Error in generation: {str(e)}"
