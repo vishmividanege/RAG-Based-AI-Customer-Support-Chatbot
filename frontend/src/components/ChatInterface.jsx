@@ -142,7 +142,7 @@ const ChatInterface = () => {
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-full max-w-2xl h-[90vh] flex flex-col glass-panel rounded-[3rem] overflow-hidden relative shadow-[0_0_50px_rgba(99,102,241,0.1)]"
+                className="w-full max-w-md h-[90vh] flex flex-col glass-panel rounded-[3rem] overflow-hidden relative shadow-[0_0_50px_rgba(99,102,241,0.1)]"
             >
                 { }
                 <div className="p-8 pb-6 flex items-center justify-between border-b border-white/[0.05] bg-white/[0.03] relative overflow-hidden group">
@@ -275,7 +275,7 @@ const ChatInterface = () => {
                                 className={`relative z-10 w-full bg-black/40 border border-white/10 text-white placeholder-white/10 text-xs font-mono rounded-3xl py-6 pl-8 pr-20 focus:outline-none focus:border-indigo-500/40 ring-offset-black focus:ring-1 focus:ring-indigo-500/30 transition-all ${isListening ? 'border-indigo-500/60 shadow-[0_0_30px_rgba(99,102,241,0.2)]' : ''}`}
                             />
 
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3 z-20">
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
