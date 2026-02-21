@@ -7,16 +7,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Hugging Face Inference API token
+
 HF_API_TOKEN = os.getenv("HF_API_TOKEN", "YOUR_HF_API_KEY") 
 client = InferenceClient(token=HF_API_TOKEN)
 
-# Modern instruct model
+
 MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
 
 class RAGPipeline:
     def __init__(self):
-        # Free embeddings model
+      
         self.embed_model = SentenceTransformer('all-MiniLM-L6-v2')
         self.index = None
         self.documents = []
@@ -50,9 +50,10 @@ def generate_answer_hf_stream(context_docs, user_query):
         }
     ]
 
-    # Manual stop detection to ensure absolute safety
-    stop_words = ["Question:", "Question", "Answer:", "User Question:"]
+ 
+    stop_words = ["Question:", "Question", "User Question:"] 
     accumulated_text = ""
+    yielded_content_started = False
 
     try:
         for message in client.chat_completion(
@@ -63,13 +64,22 @@ def generate_answer_hf_stream(context_docs, user_query):
         ):
             token = message.choices[0].delta.content
             if token:
+                # If we haven't yielded anything yet and the token is "Answer:" or similar, strip it
+                if not yielded_content_started:
+                    temp_text = (accumulated_text + token).strip()
+                    if temp_text.lower().startswith("answer:"):
+                        accumulated_text += token
+                        # Don't yield "Answer: " prefix
+                        continue
+                    else:
+                        yielded_content_started = True
+
                 accumulated_text += token
                 
-                # Check if any stop word has appeared in the stream
+                
                 should_stop = False
                 for stop_word in stop_words:
-                    if stop_word in accumulated_text:
-                        # Yield everything BEFORE the stop word and then break
+                    if stop_word in accumulated_text[10:]:
                         final_chunk = token.split(stop_word)[0]
                         if final_chunk:
                             yield final_chunk

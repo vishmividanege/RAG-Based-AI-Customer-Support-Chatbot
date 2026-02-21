@@ -6,14 +6,14 @@ from app.rag_pipeline import RAGPipeline, generate_answer_hf_stream
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
-# Set up logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize FastAPI
+
 app = FastAPI(title="RAG Customer Support Chatbot")
 
-# Configure CORS - Extremely permissive for debugging
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,18 +22,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load FAQ dataset
+
 faq_docs = load_faq_dataset()
 
-# Build RAG pipeline
+
 rag = RAGPipeline()
 rag.build_index(faq_docs)
 
-# Request model
+
 class Query(BaseModel):
     question: str
 
-# Streaming Chat endpoint
+
 @app.post("/chat")
 async def chat(query: Query):
     try:
