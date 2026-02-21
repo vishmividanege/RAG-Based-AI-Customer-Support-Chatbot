@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
 :root {
   --primary: #6366f1;
   --primary-glow: rgba(99, 102, 241, 0.5);
@@ -9,6 +11,10 @@
   --bg-dark: #0f1115;
   --card-bg: rgba(23, 25, 30, 0.8);
   --border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {

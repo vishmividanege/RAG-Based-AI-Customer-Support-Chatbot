@@ -51,8 +51,9 @@ def generate_answer_hf_stream(context_docs, user_query):
     ]
 
     # Manual stop detection to ensure absolute safety
-    stop_words = ["Question:", "Question", "Answer:", "User Question:"]
+    stop_words = ["Question:", "Question", "User Question:"] # Removed Answer: from stop words
     accumulated_text = ""
+    yielded_content_started = False
 
     try:
         for message in client.chat_completion(
@@ -63,13 +64,22 @@ def generate_answer_hf_stream(context_docs, user_query):
         ):
             token = message.choices[0].delta.content
             if token:
+                # If we haven't yielded anything yet and the token is "Answer:" or similar, strip it
+                if not yielded_content_started:
+                    temp_text = (accumulated_text + token).strip()
+                    if temp_text.lower().startswith("answer:"):
+                        accumulated_text += token
+                        # Don't yield "Answer: " prefix
+                        continue
+                    else:
+                        yielded_content_started = True
+
                 accumulated_text += token
                 
-                # Check if any stop word has appeared in the stream
+                # Check if any stop word has appeared in the stream (now excluding "Answer:")
                 should_stop = False
                 for stop_word in stop_words:
-                    if stop_word in accumulated_text:
-                        # Yield everything BEFORE the stop word and then break
+                    if stop_word in accumulated_text[10:]: # Look ahead, ignore start
                         final_chunk = token.split(stop_word)[0]
                         if final_chunk:
                             yield final_chunk

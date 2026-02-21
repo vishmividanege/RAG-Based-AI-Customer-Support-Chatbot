@@ -19,7 +19,7 @@ const ChatInterface = () => {
     useEffect(() => {
         const checkBackend = async () => {
             try {
-                const res = await fetch('http://127.0.0.1:8000/health');
+                const res = await fetch('http://localhost:8000/health');
                 if (res.ok) setIsBackendOnline(true);
                 else setIsBackendOnline(false);
             } catch (e) {
@@ -197,7 +197,7 @@ const ChatInterface = () => {
                     </button>
                 </div>
                 <p className="mt-3 text-center text-[10px] text-white/20 uppercase tracking-widest font-bold">
-                    Powered by Streaming RAG & Mistral-7B
+                    Powered by RAG & Zephyr-7B
                 </p>
             </form>
         </motion.div>
