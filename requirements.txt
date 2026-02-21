@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+datasets
+sentence-transformers
+faiss-cpu
+huggingface_hub
+python-dotenv
+numpy==1.26.4
