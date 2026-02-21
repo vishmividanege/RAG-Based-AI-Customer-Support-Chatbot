@@ -7,16 +7,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Hugging Face Inference API token
+
 HF_API_TOKEN = os.getenv("HF_API_TOKEN", "YOUR_HF_API_KEY") 
 client = InferenceClient(token=HF_API_TOKEN)
 
-# Modern instruct model
+
 MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
 
 class RAGPipeline:
     def __init__(self):
-        # Free embeddings model
+      
         self.embed_model = SentenceTransformer('all-MiniLM-L6-v2')
         self.index = None
         self.documents = []
@@ -50,8 +50,8 @@ def generate_answer_hf_stream(context_docs, user_query):
         }
     ]
 
-    # Manual stop detection to ensure absolute safety
-    stop_words = ["Question:", "Question", "User Question:"] # Removed Answer: from stop words
+ 
+    stop_words = ["Question:", "Question", "User Question:"] 
     accumulated_text = ""
     yielded_content_started = False
 
@@ -76,10 +76,10 @@ def generate_answer_hf_stream(context_docs, user_query):
 
                 accumulated_text += token
                 
-                # Check if any stop word has appeared in the stream (now excluding "Answer:")
+                
                 should_stop = False
                 for stop_word in stop_words:
-                    if stop_word in accumulated_text[10:]: # Look ahead, ignore start
+                    if stop_word in accumulated_text[10:]:
                         final_chunk = token.split(stop_word)[0]
                         if final_chunk:
                             yield final_chunk
